@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שאלון מתאמן חדש</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0A0A0A;
+    --white: #FFFFFF;
+    --teal: #00C896;
+    --teal-d: #00A078;
+    --teal-dim: rgba(0,200,150,0.12);
+    --gray-1: #141414;
+    --gray-2: #1E1E1E;
+    --gray-3: #2A2A2A;
+    --gray-4: #3A3A3A;
+    --gray-5: #888888;
+    --gray-6: #BBBBBB;
+    --amber: #F5A623;
+    --coral: #FF5C5C;
+    --body: 'Heebo', sans-serif;
+    --display: 'Bebas Neue', sans-serif;
+    --radius: 12px;
+    --radius-sm: 6px;
+    --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body);
+    background: var(--ink);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(0,200,150,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(0,200,150,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gray-3);
+    z-index: 100;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+    box-shadow: 0 0 12px rgba(0,200,150,0.6);
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 1;
+    padding: 60px 24px 40px;
+    text-align: center;
+    border-bottom: 0.5px solid var(--gray-3);
+  }
+
+  .logo-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 16px rgba(0,200,150,0.8);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+  .logo-text {
+    font-family: var(--display);
+    font-size: 15px;
+    letter-spacing: 4px;
+    color: var(--gray-5);
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(48px, 8vw, 80px);
+    line-height: 0.95;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  h1 span { color: var(--teal); }
+
+  .header-sub {
+    font-size: 15px;
+    color: var(--gray-5);
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ── STEP INDICATOR ── */
+  .steps-nav {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px;
+    flex-wrap: wrap;
+  }
+
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gray-4);
+    transition: all var(--transition);
+    cursor: pointer;
+  }
+  .step-dot.active {
+    background: var(--teal);
+    box-shadow: 0 0 10px rgba(0,200,150,0.6);
+    transform: scale(1.3);
+  }
+  .step-dot.done {
+    background: var(--teal-d);
+  }
+
+  /* ── MAIN FORM CONTAINER ── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 24px 120px;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    display: none;
+    animation: slideIn 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .section.active { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 0.5px solid var(--gray-3);
+  }
+
+  .section-number {
+    font-family: var(--display);
+    font-size: 72px;
+    line-height: 1;
+    color: var(--teal-dim);
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .section-desc {
+    font-size: 13px;
+    color: var(--gray-5);
+    font-weight: 300;
+  }
+
+  /* ── FIELD GROUP ── */
+  .field-group {
+    margin-bottom: 28px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray-6);
+    margin-bottom: 10px;
+  }
+  label .required {
+    color: var(--teal);
+    margin-right: 3px;
+  }
+  label .hint {
+    font-size: 11px;
+    color: var(--gray-5);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* ── INPUTS ── */
+  input[type="text"],
+  input[type="number"],
+  input[type="tel"],
+  textarea,
+  select {
+    width: 100%;
+    background: var(--gray-2);
+    border: 1px solid var(--gray-4);
+    border-radius: var(--radius-sm);
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 15px;
+    padding: 14px 16px;
+    transition: all var(--transition);
+    outline: none;
+    direction: rtl;
+    -webkit-appearance: none;
+  }
+
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--teal);
+    background: var(--gray-3);
+    box-shadow: 0 0 0 3px rgba(0,200,150,0.1);
+  }
+
+  input::placeholder, textarea::placeholder { color: var(--gray-5); }
+
+  input.error, textarea.error, select.error {
+    border-color: var(--coral);
+    box-shadow: 0 0 0 3px rgba(255,92,92,0.1);
+  }
+
+  .error-msg {
+    font-size: 12px;
+    color: var(--coral);
+    margin-top: 6px;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+
+  /* ── RADIO / CHECKBOX GRID ── */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+
+  .options-grid.wide {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .option-item {
+    position: relative;
+  }
+
+  .option-item input[type="radio"],
+  .option-item input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--gray-2);
+    border: 1px solid var(--gray-4);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--gray-6);
+    user-select: none;
+  }
+
+  .option-label:hover {
+    border-color: var(--gray-5);
+    background: var(--gray-3);
+    color: var(--white);
+  }
+
+  .option-item input:checked + .option-label {
+    border-color: var(--teal);
+    background: var(--teal-dim);
+    color: var(--teal);
+  }
+
+  .option-check {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+  }
+  .option-item input[type="checkbox"] + .option-label .option-check {
+    border-radius: 4px;
+  }
+  .option-item input:checked + .option-label .option-check {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+  .option-item input:checked + .option-label .option-check::after {
+    content: '✓';
+    font-size: 11px;
+    color: var(--ink);
+    font-weight: 900;
+  }
+
+  /* ── RANGE SLIDER ── */
+  .range-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    background: var(--gray-3);
+    height: 4px;
+    border-radius: 2px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 10px rgba(0,200,150,0.5);
+    cursor: pointer;
+  }
+
+  .range-val {
+    font-family: var(--display);
+    font-size: 24px;
+    color: var(--teal);
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--gray-5);
+    margin-top: 6px;
+  }
+
+  /* ── TWO COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── INLINE TAG INPUT ── */
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 500px) {
+    .days-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 0.5px;
+    background: var(--gray-3);
+    margin: 32px 0;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 40px;
+    justify-content: flex-start;
+  }
+
+  .btn {
+    font-family: var(--display);
+    font-size: 16px;
+    letter-spacing: 2px;
+    padding: 14px 32px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-primary {
+    background: var(--teal);
+    color: var(--ink);
+  }
+  .btn-primary:hover {
+    background: #00e6ad;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0,200,150,0.3);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--gray-5);
+    border: 1px solid var(--gray-4);
+  }
+  .btn-secondary:hover {
+    border-color: var(--gray-5);
+    color: var(--white);
+  }
+
+  /* ── SUCCESS SCREEN ── */
+  #success-screen {
+    display: none;
+    text-align: center;
+    padding: 80px 24px;
+    animation: slideIn 0.5s ease;
+  }
+
+  .success-icon {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--teal-dim);
+    border: 2px solid var(--teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 32px;
+    font-size: 32px;
+  }
+
+  #success-screen h2 {
+    font-family: var(--display);
+    font-size: 42px;
+    color: var(--teal);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  #success-screen p {
+    color: var(--gray-5);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 400px;
+    margin: 0 auto 40px;
+  }
+
+  /* ── SUMMARY OUTPUT ── */
+  #summary-box {
+    background: var(--gray-2);
+    border: 1px solid var(--gray-4);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: right;
+    margin-top: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #summary-box h3 {
+    font-family: var(--display);
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--teal);
+    margin-bottom: 16px;
+  }
+
+  #summary-content {
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--gray-6);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .copy-btn {
+    margin-top: 16px;
+    background: var(--gray-3);
+    border: 1px solid var(--gray-4);
+    color: var(--gray-6);
+    font-family: var(--body);
+    font-size: 13px;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .copy-btn:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+  .copy-btn.copied { color: var(--teal); border-color: var(--teal); }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 32px;
+    font-size: 12px;
+    color: var(--gray-5);
+    letter-spacing: 1px;
+    border-top: 0.5px solid var(--gray-3);
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--gray-4); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<header>
+  <div class="logo-mark">
+    <div class="logo-dot"></div>
+    <div class="logo-text">ATHLETE INTAKE</div>
+  </div>
+  <h1>שאלון<br><span>מתאמן חדש</span></h1>
+  <p class="header-sub">מלא את הפרטים הבאים כדי שנוכל לבנות לך תוכנית אימונים מותאמת אישית במדויק.</p>
+</header>
+
+<div class="steps-nav" id="steps-nav"></div>
+
+<main>
+<form id="intake-form" novalidate>
+
+<!-- ─── SECTION 1: פרטים אישיים ─── -->
+<div class="section active" data-section="1">
+  <div class="section-header">
+    <div class="section-number">01</div>
+    <div class="section-title">פרטים אישיים</div>
+    <div class="section-desc">נתחיל בהכרות בסיסית</div>
+  </div>
+
+  <div class="two-col">
+    <div class="field-group">
+      <label>שם מלא <span class="required">*</span></label>
+      <input type="text" id="name" placeholder="ישראל ישראלי" required>
+      <div class="error-msg" id="name-err">חובה למלא שם</div>
+    </div>
+    <div class="field-group">
+      <label>גיל <span class="required">*</span></label>
+      <input type="number" id="age" placeholder="25" min="14" max="80" required>
+      <div class="error-msg" id="age-err">נא להזין גיל תקין</div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>מין ביולוגי</label>
+    <div class="options-grid">
+      <div class="option-item">
+        <input type="radio" name="gender" id="male" value="זכר">
+        <label class="option-label" for="male">
+          <span class="option-check"></span> זכר
+        </label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="gender" id="female" value="נקבה">
+        <label class="option-label" for="female">
+          <span class="option-check"></span> נקבה
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="field-group">
+      <label>משקל (ק"ג) <span class="hint">אופציונלי</span></label>
+      <input type="number" id="weight" placeholder="75">
+    </div>
+    <div class="field-group">
+      <label>גובה (ס"מ) <span class="hint">אופציונלי</span></label>
+      <input type="number" id="height" placeholder="175">
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button type="button" class="btn btn-primary" onclick="nextSection(2)">המשך ←</button>
+  </div>
+</div>
+
+<!-- ─── SECTION 2: מטרות ─── -->
+<div class="section" data-section="2">
+  <div class="section-header">
+    <div class="section-number">02</div>
+    <div class="section-title">מטרות ויעדים</div>
+    <div class="section-desc">מה אתה רוצה להשיג?</div>
+  </div>
+
+  <div class="field-group">
+    <label>מטרות <span class="required">*</span>
+      <span class="hint">ניתן לבחור יותר ממטרה אחת</span>
+    </label>
+    <div class="options-grid wide" id="goal-options">
+      <div class="option-item">
+        <input type="checkbox" name="goal" id="g1" value="ירידה בשומן / ירידה במשקל">
+        <label class="option-label" for="g1"><span class="option-check"></span>ירידה בשומן</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="goal" id="g2" value="בניית שריר ועלייה במסה">
+        <label class="option-label" for="g2"><span class="option-check"></span>בניית שריר</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="goal" id="g3" value="שיפור ביצועי ריצה">
+        <label class="option-label" for="g3"><span class="option-check"></span>שיפור ריצה</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="goal" id="g4" value="כושר כללי ובריאות">
+        <label class="option-label" for="g4"><span class="option-check"></span>כושר כללי</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="goal" id="g5" value="הכנה לאירוע ספורטיבי">
+        <label class="option-label" for="g5"><span class="option-check"></span>הכנה לאירוע</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="goal" id="g6" value="שיקום וחזרה לפעילות">
+        <label class="option-label" for="g6"><span class="option-check"></span>שיקום</label>
+      </div>
+    </div>
+    <div class="error-msg" id="goal-err">נא לבחור מטרה</div>
+  </div>
+
+  <div class="field-group" id="event-field" style="display:none;">
+    <label>איזה אירוע? <span class="hint">לדוגמה: חצי מרתון, מרוץ 10 ק"מ...</span></label>
+    <input type="text" id="event" placeholder="חצי מרתון בנובמבר 2026">
+  </div>
+
+  <div class="field-group">
+    <label>יעד נוסף <span class="hint">אם יש — תאר בחופשיות</span></label>
+    <textarea id="secondary-goal" placeholder="למשל: לרוץ 5 ק״מ ברצף, לרדת בצנטימטרים, להרגיש יותר אנרגטי..."></textarea>
+  </div>
+
+  <div class="field-group">
+    <label>יש לך תאריך יעד? <span class="hint">אופציונלי — אירוע, חתונה, קיץ...</span></label>
+    <input type="text" id="deadline" placeholder="קיץ 2026 / חצי מרתון מרץ 2026 / אין תאריך קבוע">
+  </div>
+
+  <div class="btn-row">
+    <button type="button" class="btn btn-primary" onclick="nextSection(3)">המשך ←</button>
+    <button type="button" class="btn btn-secondary" onclick="nextSection(1)">← חזרה</button>
+  </div>
+</div>
+
+<!-- ─── SECTION 3: רמה וניסיון ─── -->
+<div class="section" data-section="3">
+  <div class="section-header">
+    <div class="section-number">03</div>
+    <div class="section-title">רמה וניסיון</div>
+    <div class="section-desc">כמה ותיק אתה באימונים?</div>
+  </div>
+
+  <div class="field-group">
+    <label>רמת ניסיון בחדר כושר <span class="required">*</span></label>
+    <div class="options-grid wide">
+      <div class="option-item">
+        <input type="radio" name="gym-exp" id="e1" value="מתחיל — פחות משנה">
+        <label class="option-label" for="e1"><span class="option-check"></span>מתחיל (פחות משנה)</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="gym-exp" id="e2" value="בינוני — 1–3 שנים">
+        <label class="option-label" for="e2"><span class="option-check"></span>בינוני (1–3 שנים)</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="gym-exp" id="e3" value="מנוסה — 3+ שנים עם תוכנית מסודרת">
+        <label class="option-label" for="e3"><span class="option-check"></span>מנוסה (3+ שנים)</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="gym-exp" id="e4" value="לא מתאמן בחדר כושר">
+        <label class="option-label" for="e4"><span class="option-check"></span>לא מתאמן בחדר</label>
+      </div>
+    </div>
+    <div class="error-msg" id="gym-exp-err">נא לבחור רמת ניסיון</div>
+  </div>
+
+  <div class="field-group">
+    <label>ניסיון ריצה</label>
+    <div class="options-grid wide">
+      <div class="option-item">
+        <input type="radio" name="run-exp" id="r1" value="לא רץ כלל">
+        <label class="option-label" for="r1"><span class="option-check"></span>לא רץ כלל</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="run-exp" id="r2" value="מדי פעם — ללא סדר קבוע">
+        <label class="option-label" for="r2"><span class="option-check"></span>מדי פעם</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="run-exp" id="r3" value="סדיר — 2–3 פעמים בשבוע">
+        <label class="option-label" for="r3"><span class="option-check"></span>סדיר (2–3/שבוע)</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="run-exp" id="r4" value="מנוסה — מרוצים / ריצות ארוכות">
+        <label class="option-label" for="r4"><span class="option-check"></span>מנוסה</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>מה עשית בחודש האחרון? <span class="hint">תאר בחופשיות</span></label>
+    <textarea id="current-activity" placeholder="לדוגמה: 3 פעמים בשבוע חדר כושר Upper/Lower, ריצה 5 ק״מ פעמיים בשבוע, הליכות..."></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button type="button" class="btn btn-primary" onclick="nextSection(4)">המשך ←</button>
+    <button type="button" class="btn btn-secondary" onclick="nextSection(2)">← חזרה</button>
+  </div>
+</div>
+
+<!-- ─── SECTION 4: לוגיסטיקה ─── -->
+<div class="section" data-section="4">
+  <div class="section-header">
+    <div class="section-number">04</div>
+    <div class="section-title">לוגיסטיקה</div>
+    <div class="section-desc">זמינות ותנאי האימון שלך</div>
+  </div>
+
+  <div class="field-group">
+    <label>כמה ימים בשבוע אתה יכול להתאמן? <span class="required">*</span>
+      <span class="hint">כולל ריצה וחדר כושר</span>
+    </label>
+    <div class="range-wrap">
+      <span style="font-size:13px;color:var(--gray-5);">1</span>
+      <input type="range" id="days-per-week" min="1" max="7" value="4" oninput="document.getElementById('days-val').textContent=this.value">
+      <span style="font-size:13px;color:var(--gray-5);">7</span>
+      <div class="range-val" id="days-val">4</div>
+    </div>
+    <div class="range-labels"><span>יום אחד</span><span>כל יום</span></div>
+  </div>
+
+  <div class="field-group">
+    <label>אילו ימים מתאימים לך? <span class="hint">בחר כמה שתרצה</span></label>
+    <div class="days-grid">
+      <div class="option-item">
+        <input type="checkbox" name="days" id="d1" value="ראשון">
+        <label class="option-label" for="d1"><span class="option-check"></span>א׳</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="days" id="d2" value="שני">
+        <label class="option-label" for="d2"><span class="option-check"></span>ב׳</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="days" id="d3" value="שלישי">
+        <label class="option-label" for="d3"><span class="option-check"></span>ג׳</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="days" id="d4" value="רביעי">
+        <label class="option-label" for="d4"><span class="option-check"></span>ד׳</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="days" id="d5" value="חמישי">
+        <label class="option-label" for="d5"><span class="option-check"></span>ה׳</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="days" id="d6" value="שישי">
+        <label class="option-label" for="d6"><span class="option-check"></span>ו׳</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="days" id="d7" value="שבת">
+        <label class="option-label" for="d7"><span class="option-check"></span>ש׳</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>משך אימון ממוצע <span class="required">*</span></label>
+    <div class="options-grid">
+      <div class="option-item">
+        <input type="radio" name="duration" id="dur1" value="30–45 דקות">
+        <label class="option-label" for="dur1"><span class="option-check"></span>30–45 דק׳</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="duration" id="dur2" value="45–60 דקות">
+        <label class="option-label" for="dur2"><span class="option-check"></span>45–60 דק׳</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="duration" id="dur3" value="60–90 דקות">
+        <label class="option-label" for="dur3"><span class="option-check"></span>60–90 דק׳</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="duration" id="dur4" value="90+ דקות">
+        <label class="option-label" for="dur4"><span class="option-check"></span>90+ דק׳</label>
+      </div>
+    </div>
+    <div class="error-msg" id="duration-err">נא לבחור משך אימון</div>
+  </div>
+
+  <div class="field-group">
+    <label>גישה לציוד <span class="hint">בחר את כל מה שרלוונטי</span></label>
+    <div class="options-grid wide">
+      <div class="option-item">
+        <input type="checkbox" name="equipment" id="eq1" value="חדר כושר מלא">
+        <label class="option-label" for="eq1"><span class="option-check"></span>חדר כושר מלא</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="equipment" id="eq2" value="ציוד ביתי בסיסי">
+        <label class="option-label" for="eq2"><span class="option-check"></span>ציוד ביתי</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="equipment" id="eq3" value="מסלול ריצה / שטח פתוח">
+        <label class="option-label" for="eq3"><span class="option-check"></span>מסלול ריצה</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="equipment" id="eq4" value="אופניים קבועים / ספינינג">
+        <label class="option-label" for="eq4"><span class="option-check"></span>אופניים / ספינינג</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" name="equipment" id="eq5" value="בריכת שחייה">
+        <label class="option-label" for="eq5"><span class="option-check"></span>בריכה</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>שעון ספורט / GPS <span class="hint">האם יש לך שעון חכם לאימונים?</span></label>
+    <div class="options-grid wide">
+      <div class="option-item">
+        <input type="radio" name="sport-watch" id="sw1" value="כן — Garmin">
+        <label class="option-label" for="sw1"><span class="option-check"></span>⌚ כן — Garmin</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="sport-watch" id="sw2" value="כן — Apple Watch">
+        <label class="option-label" for="sw2"><span class="option-check"></span>⌚ כן — Apple Watch</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="sport-watch" id="sw3" value="כן — Polar">
+        <label class="option-label" for="sw3"><span class="option-check"></span>⌚ כן — Polar</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="sport-watch" id="sw4" value="כן — Suunto">
+        <label class="option-label" for="sw4"><span class="option-check"></span>⌚ כן — Suunto</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="sport-watch" id="sw5" value="כן — מותג אחר">
+        <label class="option-label" for="sw5"><span class="option-check"></span>⌚ כן — אחר</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="sport-watch" id="sw6" value="לא — אין לי שעון ספורט">
+        <label class="option-label" for="sw6"><span class="option-check"></span>✗ אין לי</label>
+      </div>
+    </div>
+    <div id="sport-watch-other" style="display:none; margin-top:12px;">
+      <input type="text" id="sport-watch-other-text" placeholder="איזה מותג / דגם?">
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button type="button" class="btn btn-primary" onclick="nextSection(5)">המשך ←</button>
+    <button type="button" class="btn btn-secondary" onclick="nextSection(3)">← חזרה</button>
+  </div>
+</div>
+
+<!-- ─── SECTION 5: בריאות ─── -->
+<div class="section" data-section="5">
+  <div class="section-header">
+    <div class="section-number">05</div>
+    <div class="section-title">בריאות ופציעות</div>
+    <div class="section-desc">מידע חיוני לתכנון בטוח</div>
+  </div>
+
+  <div class="field-group">
+    <label>יש לך פציעות קיימות? <span class="required">*</span></label>
+    <div class="options-grid">
+      <div class="option-item">
+        <input type="radio" name="injuries" id="inj0" value="לא, הכל תקין">
+        <label class="option-label" for="inj0"><span class="option-check"></span>לא, הכל תקין</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="injuries" id="inj1" value="יש פציעה / כאב">
+        <label class="option-label" for="inj1"><span class="option-check"></span>יש פציעה / כאב</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="injuries" id="inj2" value="היסטוריה של פציעות">
+        <label class="option-label" for="inj2"><span class="option-check"></span>היסטוריה של פציעות</label>
+      </div>
+    </div>
+    <div class="error-msg" id="injuries-err">נא לבחור</div>
+  </div>
+
+  <div class="field-group" id="injury-detail-field">
+    <label>פרט את הפציעה / הכאב <span class="hint">מה, היכן, כמה זמן?</span></label>
+    <textarea id="injury-detail" placeholder="לדוגמה: שין ספלינטס בשוק שמאל כשלושה חודשים, כאב גב תחתון לסירוגין..."></textarea>
+  </div>
+
+  <div class="field-group">
+    <label>מגבלות בריאותיות אחרות <span class="hint">אופציונלי</span></label>
+    <textarea id="health-limits" placeholder="לדוגמה: לחץ דם גבוה, סכרת, אסטמה, בעיות לב — או כל מגבלה אחרת שצריך לדעת עליה"></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button type="button" class="btn btn-primary" onclick="nextSection(6)">המשך ←</button>
+    <button type="button" class="btn btn-secondary" onclick="nextSection(4)">← חזרה</button>
+  </div>
+</div>
+
+<!-- ─── SECTION 6: אורח חיים ─── -->
+<div class="section" data-section="6">
+  <div class="section-header">
+    <div class="section-number">06</div>
+    <div class="section-title">אורח חיים ותזונה</div>
+    <div class="section-desc">ההקשר שמסביב לאימונים</div>
+  </div>
+
+  <div class="two-col">
+    <div class="field-group">
+      <label>שעות שינה בלילה</label>
+      <div class="range-wrap">
+        <span style="font-size:13px;color:var(--gray-5);">4</span>
+        <input type="range" id="sleep" min="4" max="10" value="7" oninput="document.getElementById('sleep-val').textContent=this.value">
+        <span style="font-size:13px;color:var(--gray-5);">10</span>
+        <div class="range-val" id="sleep-val">7</div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>רמת סטרס יומיומי</label>
+      <div class="options-grid" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="option-item">
+          <input type="radio" name="stress" id="st1" value="נמוך">
+          <label class="option-label" for="st1"><span class="option-check"></span>נמוך</label>
+        </div>
+        <div class="option-item">
+          <input type="radio" name="stress" id="st2" value="בינוני">
+          <label class="option-label" for="st2"><span class="option-check"></span>בינוני</label>
+        </div>
+        <div class="option-item">
+          <input type="radio" name="stress" id="st3" value="גבוה">
+          <label class="option-label" for="st3"><span class="option-check"></span>גבוה</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>סגנון תזונה</label>
+    <div class="options-grid wide">
+      <div class="option-item">
+        <input type="radio" name="diet" id="diet1" value="אוכל הכל">
+        <label class="option-label" for="diet1"><span class="option-check"></span>אוכל הכל</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="diet" id="diet2" value="צמחוני">
+        <label class="option-label" for="diet2"><span class="option-check"></span>צמחוני</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="diet" id="diet3" value="טבעוני">
+        <label class="option-label" for="diet3"><span class="option-check"></span>טבעוני</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="diet" id="diet4" value="ללא גלוטן / לקטוז">
+        <label class="option-label" for="diet4"><span class="option-check"></span>ללא גלוטן/לקטוז</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="diet" id="diet5" value="כשר">
+        <label class="option-label" for="diet5"><span class="option-check"></span>כשר</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>המכשול הכי גדול לעקביות <span class="hint">מה בדרך כלל עוצר אותך?</span></label>
+    <textarea id="obstacle" placeholder="לדוגמה: חוסר זמן, עייפות, חוסר מוטיבציה, כאבים, עבודה..."></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button type="button" class="btn btn-primary" onclick="nextSection(7)">המשך ←</button>
+    <button type="button" class="btn btn-secondary" onclick="nextSection(5)">← חזרה</button>
+  </div>
+</div>
+
+<!-- ─── SECTION 7: העדפות ─── -->
+<div class="section" data-section="7">
+  <div class="section-header">
+    <div class="section-number">07</div>
+    <div class="section-title">העדפות ומידע נוסף</div>
+    <div class="section-desc">כמעט סיימנו!</div>
+  </div>
+
+  <div class="field-group">
+    <label>פיצול אימונים מבוקש <span class="hint">אם יש לך העדפה</span></label>
+    <div class="options-grid wide">
+      <div class="option-item">
+        <input type="radio" name="split" id="sp0" value="לא משנה לי — המאמן יחליט">
+        <label class="option-label" for="sp0"><span class="option-check"></span>המאמן יחליט</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="split" id="sp1" value="Full Body">
+        <label class="option-label" for="sp1"><span class="option-check"></span>Full Body</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="split" id="sp2" value="Upper / Lower">
+        <label class="option-label" for="sp2"><span class="option-check"></span>Upper / Lower</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="split" id="sp3" value="Push / Pull / Legs">
+        <label class="option-label" for="sp3"><span class="option-check"></span>Push / Pull / Legs</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="split" id="sp4" value="קבוצות שרירים ספציפיות">
+        <label class="option-label" for="sp4"><span class="option-check"></span>קבוצות שרירים</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>מה עבד לך בעבר? <span class="hint">תוכניות, שיטות, סגנונות שאהבת</span></label>
+    <textarea id="what-worked" placeholder="לדוגמה: אהבתי PPL, ריצות ארוכות ביום שישי, אימוני HIIT..."></textarea>
+  </div>
+
+  <div class="field-group">
+    <label>מה לא עבד? <span class="hint">מה לא חזרת אליו ולמה</span></label>
+    <textarea id="what-didnt" placeholder="לדוגמה: לא אהבתי ריצה על הליכון, אימוני בוקר לא מתאימים לי..."></textarea>
+  </div>
+
+  <div class="field-group">
+    <label>עוד משהו שחשוב לדעת? <span class="hint">כל מידע רלוונטי שלא כוסה</span></label>
+    <textarea id="extra-info" placeholder="כל דבר שחשוב לך שהמאמן יידע..."></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button type="button" class="btn btn-primary" onclick="submitForm()">שלח שאלון ✓</button>
+    <button type="button" class="btn btn-secondary" onclick="nextSection(6)">← חזרה</button>
+  </div>
+</div>
+
+</form>
+
+<!-- SUCCESS -->
+<div id="success-screen">
+  <div class="success-icon">✓</div>
+  <h2>תודה!</h2>
+  <p>השאלון נשלח בהצלחה.<br>המאמן יצור איתך קשר בקרוב עם תוכנית מותאמת אישית.</p>
+</div>
+</main>
+
+<footer>ATHLETE INTAKE FORM &nbsp;·&nbsp; בניית תוכנית אישית</footer>
+
+<script>
+const TOTAL_SECTIONS = 7;
+let currentSection = 1;
+
+// Build step dots
+const nav = document.getElementById('steps-nav');
+for (let i = 1; i <= TOTAL_SECTIONS; i++) {
+  const d = document.createElement('div');
+  d.className = 'step-dot' + (i === 1 ? ' active' : '');
+  d.dataset.step = i;
+  d.onclick = () => { /* allow jumping back only */ if (i < currentSection) nextSection(i); };
+  nav.appendChild(d);
+}
+
+function updateProgress() {
+  const pct = ((currentSection - 1) / (TOTAL_SECTIONS - 1)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+  document.querySelectorAll('.step-dot').forEach((d, idx) => {
+    const s = idx + 1;
+    d.classList.toggle('active', s === currentSection);
+    d.classList.toggle('done', s < currentSection);
+  });
+}
+
+function nextSection(n) {
+  if (n > currentSection && !validateSection(currentSection)) return;
+  document.querySelector(`[data-section="${currentSection}"]`).classList.remove('active');
+  currentSection = n;
+  document.querySelector(`[data-section="${currentSection}"]`).classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateSection(s) {
+  let ok = true;
+
+  const clearErr = (id) => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.remove('show'); }
+  };
+  const showErr = (id) => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.add('show'); }
+    ok = false;
+  };
+  const markInput = (id, valid) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('error', !valid);
+  };
+
+  if (s === 1) {
+    const name = document.getElementById('name').value.trim();
+    const age = parseInt(document.getElementById('age').value);
+    clearErr('name-err'); clearErr('age-err');
+    if (!name) { showErr('name-err'); markInput('name', false); } else markInput('name', true);
+    if (!age || age < 14 || age > 80) { showErr('age-err'); markInput('age', false); } else markInput('age', true);
+  }
+
+  if (s === 2) {
+    clearErr('goal-err');
+    if (!document.querySelector('input[name="goal"]:checked')) showErr('goal-err');
+  }
+
+  if (s === 3) {
+    clearErr('gym-exp-err');
+    if (!document.querySelector('input[name="gym-exp"]:checked')) showErr('gym-exp-err');
+  }
+
+  if (s === 4) {
+    clearErr('duration-err');
+    if (!document.querySelector('input[name="duration"]:checked')) showErr('duration-err');
+  }
+
+  if (s === 5) {
+    clearErr('injuries-err');
+    if (!document.querySelector('input[name="injuries"]:checked')) showErr('injuries-err');
+  }
+
+  return ok;
+}
+
+// Show sport watch "other" field conditionally
+document.querySelectorAll('input[name="sport-watch"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const isOther = document.querySelector('input[name="sport-watch"][value="כן — מותג אחר"]:checked');
+    document.getElementById('sport-watch-other').style.display = isOther ? 'block' : 'none';
+  });
+});
+
+// Show event field conditionally
+document.querySelectorAll('input[name="goal"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const eventChecked = document.querySelector('input[name="goal"][value="הכנה לאירוע ספורטיבי"]:checked');
+    document.getElementById('event-field').style.display = eventChecked ? 'block' : 'none';
+  });
+});
+
+function getChecked(name) {
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
+    .map(e => e.value).join(', ') || '—';
+}
+function getVal(id) {
+  const el = document.getElementById(id);
+  return el ? (el.value.trim() || '—') : '—';
+}
+function getRangeVal(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : '—';
+}
+
+async function submitForm() {
+  if (!validateSection(7)) return;
+
+  const days = [...document.querySelectorAll('input[name="days"]:checked')].map(e=>e.value);
+  const equipment = [...document.querySelectorAll('input[name="equipment"]:checked')].map(e=>e.value);
+
+  const summary = `━━━━━━━━━━━━━━━━━━━━━━━━━
+שאלון מתאמן — ${getVal('name')}
+━━━━━━━━━━━━━━━━━━━━━━━━━
+
+👤 פרטים אישיים
+שם: ${getVal('name')}
+גיל: ${getVal('age')}
+מין: ${getChecked('gender')}
+משקל: ${getVal('weight')} ק"ג  |  גובה: ${getVal('height')} ס"מ
+טלפון: ${getVal('phone')}
+
+🎯 מטרות
+מטרה עיקרית: ${getChecked('goal')}${getVal('event') !== '—' ? '\nאירוע: ' + getVal('event') : ''}
+מטרה נוספת: ${getVal('secondary-goal')}
+תאריך יעד: ${getVal('deadline')}
+
+💪 ניסיון
+חדר כושר: ${getChecked('gym-exp')}
+ריצה: ${getChecked('run-exp')}
+פעילות נוכחית: ${getVal('current-activity')}
+
+📅 לוגיסטיקה
+ימים בשבוע: ${getRangeVal('days-per-week')}
+ימים מועדפים: ${days.length ? days.join(', ') : '—'}
+משך אימון: ${getChecked('duration')}
+ציוד: ${equipment.length ? equipment.join(', ') : '—'}
+שעון ספורט: ${getChecked('sport-watch')}${getVal('sport-watch-other-text') !== '—' ? ' (' + getVal('sport-watch-other-text') + ')' : ''}
+
+🏥 בריאות
+פציעות: ${getChecked('injuries')}
+פירוט פציעה: ${getVal('injury-detail')}
+מגבלות בריאות: ${getVal('health-limits')}
+
+🌙 אורח חיים
+שינה: ${getRangeVal('sleep')} שעות
+סטרס: ${getChecked('stress')}
+תזונה: ${getChecked('diet')}
+מכשול לעקביות: ${getVal('obstacle')}
+
+⚙️ העדפות
+פיצול: ${getChecked('split')}
+מה עבד: ${getVal('what-worked')}
+מה לא עבד: ${getVal('what-didnt')}
+מידע נוסף: ${getVal('extra-info')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━
+אנא בנה לי תוכנית אימונים מותאמת אישית לפי הנתונים הבאים
+━━━━━━━━━━━━━━━━━━━━━━━━━`;
+
+  // Show loading state
+  const submitBtn = document.querySelector('.btn-primary');
+  submitBtn.textContent = 'שולח...';
+  submitBtn.disabled = true;
+
+  try {
+    const res = await fetch('https://formspree.io/f/mrejdyol', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        _subject: `שאלון מתאמן חדש — ${getVal('name')}`,
+        סיכום: summary
+      })
+    });
+
+    if (res.ok) {
+      document.getElementById('intake-form').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      document.getElementById('steps-nav').style.display = 'none';
+      document.getElementById('progress').style.width = '100%';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      submitBtn.textContent = 'שגיאה — נסה שוב';
+      submitBtn.disabled = false;
+    }
+  } catch(e) {
+    submitBtn.textContent = 'שגיאה — נסה שוב';
+    submitBtn.disabled = false;
+  }
+}
+
+updateProgress();
+</script>
+</body>
+</html>
