@@ -699,6 +699,7 @@
     <div class="section-desc">כמה ותיק אתה באימונים?</div>
   </div>
 
+  <!-- כושר -->
   <div class="field-group">
     <label>רמת ניסיון בחדר כושר <span class="required">*</span></label>
     <div class="options-grid wide">
@@ -722,6 +723,28 @@
     <div class="error-msg" id="gym-exp-err">נא לבחור רמת ניסיון</div>
   </div>
 
+  <!-- 1RM — מופיע רק למנוסה -->
+  <div class="field-group" id="gym-1rm-field" style="display:none;">
+    <label>מקסימום הרמה (1RM משוער) <span class="hint">אופציונלי — עוזר לכיול עצימויות. השאר ריק אם לא יודע</span></label>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+      <div>
+        <label style="font-size:11px;letter-spacing:0;text-transform:none;color:var(--gray-5);margin-bottom:6px;">Squat (ק"ג)</label>
+        <input type="number" id="1rm-squat" placeholder="לדוגמה: 100">
+      </div>
+      <div>
+        <label style="font-size:11px;letter-spacing:0;text-transform:none;color:var(--gray-5);margin-bottom:6px;">Bench Press (ק"ג)</label>
+        <input type="number" id="1rm-bench" placeholder="לדוגמה: 80">
+      </div>
+      <div>
+        <label style="font-size:11px;letter-spacing:0;text-transform:none;color:var(--gray-5);margin-bottom:6px;">Deadlift (ק"ג)</label>
+        <input type="number" id="1rm-deadlift" placeholder="לדוגמה: 120">
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ריצה -->
   <div class="field-group">
     <label>ניסיון ריצה</label>
     <div class="options-grid wide">
@@ -740,6 +763,50 @@
       <div class="option-item">
         <input type="radio" name="run-exp" id="r4" value="מנוסה — מרוצים / ריצות ארוכות">
         <label class="option-label" for="r4"><span class="option-check"></span>מנוסה</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- פרמטרי ריצה — מופיעים רק לסדיר / מנוסה -->
+  <div id="run-details-field" style="display:none;">
+    <div class="field-group">
+      <label>נפח ריצה שבועי נוכחי <span class="hint">כמה ק"מ בשבוע בממוצע כרגע?</span></label>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div>
+          <label style="font-size:11px;letter-spacing:0;text-transform:none;color:var(--gray-5);margin-bottom:6px;">ק"מ בשבוע</label>
+          <input type="number" id="weekly-km" placeholder="לדוגמה: 30">
+        </div>
+        <div>
+          <label style="font-size:11px;letter-spacing:0;text-transform:none;color:var(--gray-5);margin-bottom:6px;">ריצות בשבוע</label>
+          <input type="number" id="weekly-runs" placeholder="לדוגמה: 4">
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>קצב Easy נוכחי <span class="hint">בדקות לק"מ — הקצב שבו רוב הריצות שלך</span></label>
+      <input type="text" id="easy-pace" placeholder="לדוגמה: 6:00 דק/ק״מ">
+    </div>
+
+    <div class="field-group">
+      <label>שיאים אישיים (PR) <span class="hint">השאר ריק את מה שלא רלוונטי</span></label>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div>
+          <label style="font-size:11px;letter-spacing:0;text-transform:none;color:var(--gray-5);margin-bottom:6px;">5 ק"מ</label>
+          <input type="text" id="pr-5k" placeholder="לדוגמה: 23:30">
+        </div>
+        <div>
+          <label style="font-size:11px;letter-spacing:0;text-transform:none;color:var(--gray-5);margin-bottom:6px;">10 ק"מ</label>
+          <input type="text" id="pr-10k" placeholder="לדוגמה: 50:00">
+        </div>
+        <div>
+          <label style="font-size:11px;letter-spacing:0;text-transform:none;color:var(--gray-5);margin-bottom:6px;">חצי מרתון</label>
+          <input type="text" id="pr-hm" placeholder="לדוגמה: 1:52:00">
+        </div>
+        <div>
+          <label style="font-size:11px;letter-spacing:0;text-transform:none;color:var(--gray-5);margin-bottom:6px;">מרתון</label>
+          <input type="text" id="pr-fm" placeholder="לדוגמה: 4:10:00">
+        </div>
       </div>
     </div>
   </div>
@@ -907,27 +974,58 @@
   </div>
 
   <div class="field-group">
-    <label>יש לך פציעות קיימות? <span class="required">*</span></label>
-    <div class="options-grid">
+    <label>מצב פציעות נוכחי <span class="required">*</span></label>
+    <div class="options-grid wide">
       <div class="option-item">
         <input type="radio" name="injuries" id="inj0" value="לא, הכל תקין">
-        <label class="option-label" for="inj0"><span class="option-check"></span>לא, הכל תקין</label>
+        <label class="option-label" for="inj0"><span class="option-check"></span>הכל תקין</label>
       </div>
       <div class="option-item">
-        <input type="radio" name="injuries" id="inj1" value="יש פציעה / כאב">
-        <label class="option-label" for="inj1"><span class="option-check"></span>יש פציעה / כאב</label>
+        <input type="radio" name="injuries" id="inj1" value="יש פציעה / כאב פעיל">
+        <label class="option-label" for="inj1"><span class="option-check"></span>פציעה / כאב פעיל</label>
       </div>
       <div class="option-item">
-        <input type="radio" name="injuries" id="inj2" value="היסטוריה של פציעות">
-        <label class="option-label" for="inj2"><span class="option-check"></span>היסטוריה של פציעות</label>
+        <input type="radio" name="injuries" id="inj2" value="היסטוריה של פציעות — כרגע בסדר">
+        <label class="option-label" for="inj2"><span class="option-check"></span>היסטוריה (כרגע בסדר)</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="injuries" id="inj3" value="פציעה פעילה + היסטוריה">
+        <label class="option-label" for="inj3"><span class="option-check"></span>גם וגם</label>
       </div>
     </div>
     <div class="error-msg" id="injuries-err">נא לבחור</div>
   </div>
 
-  <div class="field-group" id="injury-detail-field">
-    <label>פרט את הפציעה / הכאב <span class="hint">מה, היכן, כמה זמן?</span></label>
-    <textarea id="injury-detail" placeholder="לדוגמה: שין ספלינטס בשוק שמאל כשלושה חודשים, כאב גב תחתון לסירוגין..."></textarea>
+  <!-- פציעה פעילה — מופיע אם יש פציעה נוכחית -->
+  <div class="field-group" id="active-injury-field" style="display:none;">
+    <label>פרט את הפציעה / הכאב הנוכחי <span class="hint">מה, היכן, כמה זמן, מה מגביל?</span></label>
+    <textarea id="injury-detail" placeholder="לדוגמה: כאב ברך ימין (IT Band) כחודשיים — כואב בריצות מעל 8 ק״מ. אסור להכביד על כפיפות עמוקות..."></textarea>
+  </div>
+
+  <!-- היסטוריה — מופיע אם יש היסטוריה -->
+  <div class="field-group" id="injury-history-field" style="display:none;">
+    <label>היסטוריית פציעות <span class="hint">פציעות עבר שהשפיעו על האימונים</span></label>
+    <textarea id="injury-history" placeholder="לדוגמה: שברים במאמץ בכף הרגל לפני שנתיים — החלמה מלאה. ניתוח מניסקוס לפני 4 שנים — לא מגביל כיום..."></textarea>
+  </div>
+
+  <!-- ניתוחים -->
+  <div class="field-group">
+    <label>עברת ניתוחים? <span class="hint">אורתופדיים, בטן, לב — כל מה שרלוונטי</span></label>
+    <div class="options-grid">
+      <div class="option-item">
+        <input type="radio" name="surgeries" id="surg0" value="לא">
+        <label class="option-label" for="surg0"><span class="option-check"></span>לא</label>
+      </div>
+      <div class="option-item">
+        <input type="radio" name="surgeries" id="surg1" value="כן">
+        <label class="option-label" for="surg1"><span class="option-check"></span>כן</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-group" id="surgery-detail-field" style="display:none;">
+    <label>פרט את הניתוח/ים <span class="hint">מה, מתי, האם יש השפעה על האימונים?</span></label>
+    <textarea id="surgery-detail" placeholder="לדוגמה: ניתוח מניסקוס ברך שמאל 2021 — ללא מגבלה כיום. ניתוח בטן 2019 — ריפוי מלא..."></textarea>
   </div>
 
   <div class="field-group">
@@ -1179,6 +1277,42 @@ document.querySelectorAll('input[name="goal"]').forEach(r => {
   });
 });
 
+// Show run details (km/pace/PRs) for experienced runners
+document.querySelectorAll('input[name="run-exp"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const val = document.querySelector('input[name="run-exp"]:checked')?.value || '';
+    const show = val.includes('סדיר') || val.includes('מנוסה');
+    document.getElementById('run-details-field').style.display = show ? 'block' : 'none';
+  });
+});
+
+// Show 1RM fields for advanced gym users
+document.querySelectorAll('input[name="gym-exp"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const val = document.querySelector('input[name="gym-exp"]:checked')?.value || '';
+    document.getElementById('gym-1rm-field').style.display = val.includes('מנוסה') ? 'block' : 'none';
+  });
+});
+
+// Show injury detail fields based on selection
+document.querySelectorAll('input[name="injuries"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const val = document.querySelector('input[name="injuries"]:checked')?.value || '';
+    const hasActive = val.includes('פעיל') || val.includes('גם וגם');
+    const hasHistory = val.includes('היסטוריה') || val.includes('גם וגם');
+    document.getElementById('active-injury-field').style.display = hasActive ? 'block' : 'none';
+    document.getElementById('injury-history-field').style.display = hasHistory ? 'block' : 'none';
+  });
+});
+
+// Show surgery detail field
+document.querySelectorAll('input[name="surgeries"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const isSurg = document.querySelector('input[name="surgeries"][value="כן"]:checked');
+    document.getElementById('surgery-detail-field').style.display = isSurg ? 'block' : 'none';
+  });
+});
+
 function getChecked(name) {
   return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
     .map(e => e.value).join(', ') || '—';
@@ -1198,6 +1332,38 @@ async function submitForm() {
   const days = [...document.querySelectorAll('input[name="days"]:checked')].map(e=>e.value);
   const equipment = [...document.querySelectorAll('input[name="equipment"]:checked')].map(e=>e.value);
 
+  // פרמטרי ריצה — רק אם רלוונטי
+  const runExp = getChecked('run-exp');
+  const hasRunData = runExp.includes('סדיר') || runExp.includes('מנוסה');
+  const runBlock = hasRunData ? `
+נפח שבועי: ${getVal('weekly-km')} ק"מ / ${getVal('weekly-runs')} ריצות בשבוע
+קצב Easy נוכחי: ${getVal('easy-pace')}
+שיאים אישיים:
+  5K: ${getVal('pr-5k')}
+  10K: ${getVal('pr-10k')}
+  חצי מרתון: ${getVal('pr-hm')}
+  מרתון: ${getVal('pr-fm')}` : '';
+
+  // 1RM — רק למנוסים
+  const gymExp = getChecked('gym-exp');
+  const has1RM = gymExp.includes('מנוסה');
+  const ormBlock = has1RM ? `
+1RM (משוער):
+  Squat: ${getVal('1rm-squat')} ק"מ
+  Bench Press: ${getVal('1rm-bench')} ק"מ
+  Deadlift: ${getVal('1rm-deadlift')} ק"מ` : '';
+
+  // פציעות
+  const injStatus = getChecked('injuries');
+  const hasActiveInj = injStatus.includes('פעיל') || injStatus.includes('גם וגם');
+  const hasHistory = injStatus.includes('היסטוריה') || injStatus.includes('גם וגם');
+  const injBlock = `
+מצב פציעות: ${injStatus}${hasActiveInj ? '\nפציעה נוכחית: ' + getVal('injury-detail') : ''}${hasHistory ? '\nהיסטוריית פציעות: ' + getVal('injury-history') : ''}`;
+
+  // ניתוחים
+  const surgeries = getChecked('surgeries');
+  const surgBlock = surgeries === 'כן' ? `\nניתוחים: ${getVal('surgery-detail')}` : '\nניתוחים: לא';
+
   const summary = `━━━━━━━━━━━━━━━━━━━━━━━━━
 שאלון מתאמן — ${getVal('name')}
 ━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1214,10 +1380,13 @@ async function submitForm() {
 מטרה נוספת: ${getVal('secondary-goal')}
 תאריך יעד: ${getVal('deadline')}
 
-💪 ניסיון
-חדר כושר: ${getChecked('gym-exp')}
-ריצה: ${getChecked('run-exp')}
-פעילות נוכחית: ${getVal('current-activity')}
+💪 ניסיון — כושר
+רמה: ${gymExp}${ormBlock}
+
+🏃 ניסיון — ריצה
+רמה: ${runExp}${runBlock}
+
+פעילות בחודש האחרון: ${getVal('current-activity')}
 
 📅 לוגיסטיקה
 ימים בשבוע: ${getRangeVal('days-per-week')}
@@ -1226,9 +1395,7 @@ async function submitForm() {
 ציוד: ${equipment.length ? equipment.join(', ') : '—'}
 שעון ספורט: ${getChecked('sport-watch')}${getVal('sport-watch-other-text') !== '—' ? ' (' + getVal('sport-watch-other-text') + ')' : ''}
 
-🏥 בריאות
-פציעות: ${getChecked('injuries')}
-פירוט פציעה: ${getVal('injury-detail')}
+🏥 בריאות${injBlock}${surgBlock}
 מגבלות בריאות: ${getVal('health-limits')}
 
 🌙 אורח חיים
@@ -1244,7 +1411,12 @@ async function submitForm() {
 מידע נוסף: ${getVal('extra-info')}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━
-אנא בנה לי תוכנית אימונים מותאמת אישית לפי הנתונים הבאים
+הוראות למאמן:
+בנה תוכנית אימונים מלאה ומותאמת אישית לפי כל הנתונים לעיל.
+— אם יש מטרת ריצה או ניסיון ריצה סדיר/מנוסה: בנה גם בלוק ריצה מלא (5 ריצות/שבוע, Zone, קצב, מרחק).
+— אם יש ניסיון כושר בינוני/מנוסה: השתמש ב-1RM לכיול עצימויות ו-RPE.
+— אם יש פציעה פעילה: הסתייג מהתרגילים הספציפיים, הצע חלופות.
+— כלול: פרופיל מתאמן, לוח שבועי, אימוני כושר מפורטים, אימוני ריצה מפורטים, תזונה, התאוששות, תוכנית עומסים ל-12 שבועות.
 ━━━━━━━━━━━━━━━━━━━━━━━━━`;
 
   // Show loading state
